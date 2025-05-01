@@ -1,0 +1,6 @@
+@GpsTogetherWebAPI_HostAddress = http://localhost:5023
+
+GET {{GpsTogetherWebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

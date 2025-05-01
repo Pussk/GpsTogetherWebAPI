@@ -1,0 +1,23 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build
+bin/
+obj/
+
+# Ef migrations snapshot
+Migrations/*Snapshot.cs
+
+# Dotnet secrets
+secrets.json
+
+# Logs
+*.log
+
+# Node / Frontend
+node_modules/
+
+# Others
+*.vsidx
