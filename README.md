@@ -49,6 +49,31 @@ dotnet run
 6. Acesse o Swagger:
 [http://localhost:5023/swagger](http://localhost:5023/swagger)
 
+ Localização em Tempo Real (SignalR)
+O GpsTogether agora transmite localizações ao vivo entre usuários conectados usando SignalR.
+
+✅ Como testar:
+Execute a API:
+
+bash
+Copiar
+Editar
+dotnet run
+Abra o arquivo em Pussk-patch-1 com Live Server
+
+Clique em 🔌 Conectar e depois em 📡 Enviar Localização
+
+Abra outra aba e repita o processo para simular outro veículo
+
+✅ Quando um usuário envia sua posição, os outros a recebem em tempo real
+
+🔧 Tecnologias utilizadas no real-time:
+SignalR com ASP.NET Core
+
+WebSocket (fallback para SSE ou Long Polling)
+
+Frontend leve com HTML + JS
+
 ## ✨ Próximos passos
 
 - Integração com mapas (ex: Leaflet.js, Google Maps)
