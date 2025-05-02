@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using GpsTogetherWebAPI.Data;
+using GpsTogetherWebAPI.Hubs;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +13,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .SetIsOriginAllowed(origin => true); // permite qualquer origem (como 127.0.0.1:5500)
+    });
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
+
 
 var app = builder.Build();
 
@@ -23,9 +39,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapHub<LocationHub>("/locationhub");
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors();
 
 app.MapControllers();
 
