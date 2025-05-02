@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GpsTogether - Teste com SignalR</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #111; color: #eee; }
+        button { margin: 5px; padding: 10px; }
+        #log { margin-top: 20px; max-height: 300px; overflow-y: scroll; background: #222; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h2>GpsTogether - Teste de Localização ao Vivo 🚗</h2>
+    <p><strong>Seu ID de usuário:</strong> <span id="uid"></span></p>
+    <button onclick="connect()">🔌 Conectar</button>
+    <button onclick="sendLocation()">📡 Enviar Localização</button>
+    <div id="log"></div>
+
+    <script>
+        const userId = Math.floor(Math.random() * 1000) + 1;
+        document.getElementById("uid").innerText = userId;
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:5023/locationhub")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        connection.on("ReceiveLocation", (data) => {
+            log(`📍 <strong>Usuário ${data.userId}</strong> em (${data.latitude}, ${data.longitude}) às ${data.timestamp}`);
+        });
+
+        async function connect() {
+            try {
+                await connection.start();
+                log("✅ Conectado ao SignalR");
+            } catch (err) {
+                log("❌ Erro ao conectar: " + err);
+            }
+        }
+
+        async function sendLocation() {
+            const lat = (Math.random() * 180 - 90).toFixed(6);
+            const lng = (Math.random() * 360 - 180).toFixed(6);
+            await connection.invoke("SendLocation", userId, parseFloat(lat), parseFloat(lng));
+            log(`📤 Localização enviada: (${lat}, ${lng})`);
+        }
+
+        function log(msg) {
+            const logBox = document.getElementById("log");
+            logBox.innerHTML += "<p>" + msg + "</p>";
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
